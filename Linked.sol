@@ -27,6 +27,9 @@ contract Linked {
     // All the messages ever written
     Message[] public messages;
 
+    // A counter of messages
+    uint256 public lastMessageId;
+
     // Sets the profile of a user
     function setProfile(bytes32 _name, bytes32 _occupation, string _bio) public {
         User memory user = User(_name, _occupation, _bio);
@@ -38,6 +41,7 @@ contract Linked {
         Message memory message = Message(_content, msg.sender, now);
         userMessages[msg.sender].push(message);
         messages.push(message);
+        lastMessageId++;
     }
 
     // Follows a new user
@@ -52,5 +56,10 @@ contract Linked {
                 delete userFollowers[msg.sender][i];
             }
         }
+    }
+
+    // Returns the people that you are following
+    function getMyFollows() public view returns(address[]) {
+        return userFollowers[msg.sender];
     }
 }
